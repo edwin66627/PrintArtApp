@@ -3,6 +3,19 @@ const app = express();
 
 app.use('/items', require('./routes/items'))
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/printart', {
+  useNewUrlParser: true, useCreateIndex: true
+});
+
+const Item = mongoose.model('Item', {
+  title: { type: String },
+  artist: { type: String },
+  image: { type: String },
+  year: { type: Number },
+  price: { type: Number },
+})
+
 const port = 8070;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
