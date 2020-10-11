@@ -1,0 +1,41 @@
+{
+  "name": "printart",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve:client": "vue-cli-service serve",
+    "serve:server": "nodemon server",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:unit": "vue-cli-service test:unit"
+  },
+  "dependencies": {
+    "express": "~4.16.4",
+    "vue": "~2.6.8",
+    "vue-router": "~3.0.2",
+    "vuex": "~3.1.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~3.5.0",
+    "@vue/cli-plugin-e2e-nightwatch": "~3.5.0",
+    "@vue/cli-plugin-eslint": "~3.5.0",
+    "@vue/cli-plugin-unit-jest": "~3.5.0",
+    "@vue/cli-service": "~3.5.0",
+    "@vue/eslint-config-prettier": "~4.0.1",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "~10.0.1",
+    "babel-jest": "~24.3.1",
+    "eslint": "~5.15.1",
+    "eslint-config-standard": "~12.0.0",
+    "eslint-plugin-html": "~5.0.3",
+    "eslint-plugin-import": "~2.16.0",
+    "eslint-plugin-node": "~8.0.1",
+    "eslint-plugin-promise": "~4.0.1",
+    "eslint-plugin-standard": "~4.0.0",
+    "eslint-plugin-vue": "~5.2.2",
+    "nodemon": "^2.0.4",
+    "vue-template-compiler": "~2.6.8"
+  }
+}
