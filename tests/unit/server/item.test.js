@@ -31,3 +31,12 @@ describe('GET /items', () => {
         expect(res.body.items.length).toBe(seedItems.length)
     })
 })
+
+describe('GET /items/:id', () => {
+    it('Should get item doc', async () => {
+        const res = await request(app)
+            .get(`/items/${seedItems[0]._id.toHexString()}`)
+            .expect(200)
+        expect(res.body.item.title).toBe(seedItems[0].title)
+    })
+})
