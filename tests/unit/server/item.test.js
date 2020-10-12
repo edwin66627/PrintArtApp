@@ -2,12 +2,11 @@ const expect = require('expect')
 const app = require('../../../server')
 const request = require('supertest')
 const Item = require('../../../server/models/item')
+const { seedItems, populateItems } = require('./seed')
 
 /*Mocha life cycle hook to clear any pre-existing data in MongoDB so it doesn´t interfere with
   the unit test */
-beforeEach(async () => {
-    return Item.deleteMany() //Deletes every single Item in DB if no criteria is passed to this method
-})
+beforeEach(populateItems)
 
 
 describe('POST /items', () => {
@@ -19,7 +18,16 @@ describe('POST /items', () => {
             .expect(200);
         expect(res.body.item.title).toBe(body.title)
         const items = await Item.find()
-        expect(items.length).toBe(1)
-        expect(items[0].title).toBe(body.title)
+        expect(items.length).toBe(seedItems.length + 1)
+        expect(items[seedItems.length].title).toBe(body.title)
+    })
+})
+
+describe('GET /items', () => {
+    it('Should get all items', async () => {
+        const res = await request(app)
+            .get('/items')
+            .expect(200)
+        expect(res.body.items.length).toBe(seedItems.length)
     })
 })
