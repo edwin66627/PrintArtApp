@@ -3,6 +3,7 @@ const app = require('../../../server')
 const request = require('supertest')
 const Item = require('../../../server/models/item')
 const { seedItems, populateItems } = require('./seed')
+const { ObjectId } = require('mongodb')
 
 /*Mocha life cycle hook to clear any pre-existing data in MongoDB so it doesn´t interfere with
   the unit test */
@@ -20,8 +21,16 @@ describe('POST /items', () => {
         const items = await Item.find()
         expect(items.length).toBe(seedItems.length + 1)
         expect(items[seedItems.length].title).toBe(body.title)
-    })
-})
+    });
+    it('should not create an item with invalid data', async () => {
+        await request(app)
+            .post('/items')
+            .send({})
+            .expect(400);
+        const items = await Item.find()
+        expect(items.length).toBe(seedItems.length)
+    });
+});
 
 describe('GET /items', () => {
     it('Should get all items', async () => {
@@ -38,5 +47,15 @@ describe('GET /items/:id', () => {
             .get(`/items/${seedItems[0]._id.toHexString()}`)
             .expect(200)
         expect(res.body.item.title).toBe(seedItems[0].title)
-    })
-})
+    });
+    it('should return 404 if item not found', async () => {
+        await request(app)
+            .get(`/items/${new ObjectId().toHexString()}`)
+            .expect(404)
+    });
+    it('should return 404 for invalid id', async () => {
+        await request(app)
+            .get('/items/123')
+            .expect(404)
+    });
+});
