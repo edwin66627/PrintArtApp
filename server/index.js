@@ -4,12 +4,12 @@ require('dotenv').config()
 
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const e = require("express");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
 app.use('/items', require('./routes/items'))
+app.use('/users', require('./routes/users'))
 
 //Two possible databases: One for app and the other for tes purposes
 const dbName = process.env.NODE_ENV === 'test' ? 'printart_test' : 'printart'

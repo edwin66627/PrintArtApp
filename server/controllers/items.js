@@ -18,7 +18,7 @@ exports.create = async (req, res) => {
         const doc = await item.save()
         res.send({ item: doc })
     } catch (err) {
-        res.status(400).send()
+        res.status(400).send(err)
 
     }
 }
