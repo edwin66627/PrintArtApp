@@ -13,7 +13,8 @@ exports.list = async (req, res) => {
 
 //Create an Item
 exports.create = async (req, res) => {
-    const item = new Item(req.body)
+    const { title, artist, year, price } = req.body //any other info in the request is left out
+    const item = new Item({ title, artist, year, price })
     try {
         const doc = await item.save()
         res.send({ item: doc })

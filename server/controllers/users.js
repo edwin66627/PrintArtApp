@@ -2,7 +2,8 @@ const User = require('../models/user')
 
 //Create an User
 exports.create = async (req, res) => {
-    const user = new User(req.body)
+    const { name, email, password } = req.body //any other info in the request is left out
+    const user = new User({ name, email, password })
     try {
         const doc = await user.save()
         const token = await doc.generateAuthtoken()

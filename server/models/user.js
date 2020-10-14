@@ -15,6 +15,12 @@ const UserSchema = mongoose.Schema({
     token: {
         type: String
     }
+}, {
+    toJSON: {
+        //'doc' is the full model document and 'ret' is plain object representation of that doc
+        //Destructuring 'ret' to exclude fields in json responses like 'password'
+        transform: (doc, { _id, name, email }) => ({ _id, name, email })
+    }
 })
 
 UserSchema.methods.generateAuthtoken = async function () {
