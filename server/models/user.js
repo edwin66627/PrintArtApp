@@ -19,7 +19,7 @@ const UserSchema = mongoose.Schema({
     toJSON: {
         //'doc' is the full model document and 'ret' is plain object representation of that doc
         //Destructuring 'ret' to exclude fields in json responses like 'password'
-        transform: (doc, { _id, name, email }) => ({ _id, name, email })
+        transform: (doc, { _id, name, email, token }) => ({ _id, name, email, token })
     }
 })
 
@@ -30,5 +30,17 @@ UserSchema.methods.generateAuthtoken = async function () {
     await this.save()
     return token
 };
+
+UserSchema.statics.findUserByToken = async function (token) {
+    try {
+        //Deconstructing payload to get just the '_id'
+        const { _id } = jwt.verify(token, process.env.JWT_SECRET)
+        //Mongoose method to find a record by passing an object with certain conditions we want to match on
+        return this.findOne({ _id, token })
+    } catch (err) {
+        throw err
+    }
+
+}
 
 module.exports = mongoose.model('User', UserSchema)
