@@ -14,21 +14,5 @@ exports.create = async (req, res) => {
         res.status(400).send(err)
     }
 }
-
-exports.read = async (req, res) => {
-    let token;
-    //Extract token
-    try {
-        token = req.header("authorization").split(" ")[1]
-    } catch (err) {
-        return res.status(401).send({ message: 'Authorization token invalid' })
-    }
-
-    //Find user corresponding to the token
-    try {
-        const user = await User.findUserByToken(token)
-        res.send({ user })
-    } catch (err) {
-        res.status(401).send(err)
-    }
-}
+//Find user and do error handling
+exports.read = async (req, res) => res.send({ user: req.user })
