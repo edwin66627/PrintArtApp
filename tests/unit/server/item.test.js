@@ -32,6 +32,21 @@ describe("POST /items", () => {
         const items = await Item.find()
         expect(items.length).toBe(seedItems.length)
     });
+    it('should not create an item without authorization header', async () => {
+        await request(app)
+            .post('/items')
+            .expect(401);
+    });
+    it('should not create an item unless admin', async () => {
+        const res = await request(app)
+            .post('/users/login')
+            .send(seedUsers[1])//Contains email and password of user with role 'user'
+            .expect(200);
+        await request(app)
+            .post('/items')
+            .set("authorization", res.headers.authorization)
+            .expect(403);
+    });
 });
 
 describe('GET /items', () => {
