@@ -15,12 +15,15 @@ const UserSchema = mongoose.Schema({
     password: { type: String, required: true, minlength: 6, trim: true },
     token: {
         type: String
+    },
+    role: {
+        type: String, enum: ["admin", "user"], default: "user"
     }
 }, {
     toJSON: {
         //'doc' is the full model document and 'ret' is plain object representation of that doc
         //Destructuring 'ret' to exclude fields in json responses like 'password'
-        transform: (doc, { _id, name, email, token }) => ({ _id, name, email, token })
+        transform: (doc, { _id, name, email, token, role }) => ({ _id, name, email, token, role })
     }
 })
 
@@ -46,7 +49,6 @@ UserSchema.statics.findUserByToken = async function (token) {
     } catch (err) {
         throw err
     }
-
 }
 
 //@argument 'user' tells mongoose what model function this pre hook should be applied to
@@ -57,6 +59,19 @@ UserSchema.pre("save", async function (next) {
             next()
         } catch (err) {
             next(err)
+        }
+    } else {
+        next()
+    }
+})
+
+UserSchema.pre("save", async function (next) {
+    if (this.isModified("role") && this.role === 'admin') {
+        const users = await this.constructor.find({ role: "admin" })
+        if (users.length >= 1) {
+            next(new Error("Only one admin user can be added"))
+        } else {
+            next()
         }
     } else {
         next()

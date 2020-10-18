@@ -1,7 +1,7 @@
 const User = require("../models/user")
 
 //Find user, attach it to the request and do error handling
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
     let token;
     //Extract token
     try {
@@ -16,6 +16,6 @@ module.exports = async (req, res) => {
         req.token = token
         next()
     } catch (err) {
-        res.status(401).send(err)
+        res.status(401).send({ message: 'Invalid User Authorization token' })
     }
 }

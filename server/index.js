@@ -14,7 +14,7 @@ app.use('/users', require('./routes/users'))
 //Two possible databases: One for app and the other for tes purposes
 const dbName = process.env.NODE_ENV === 'test' ? 'printart_test' : 'printart'
 mongoose.connect(`mongodb://127.0.0.1:27017/${dbName}`, {
-  useNewUrlParser: true, useCreateIndex: true
+  useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true
 });
 
 const port = process.env.SERVER_PORT;
