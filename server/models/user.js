@@ -25,6 +25,11 @@ const UserSchema = mongoose.Schema({
 })
 
 UserSchema.methods.generateAuthToken = async function () {
+    //In case user logs in from browser, the token generated is stored in the model and if they
+    //log in from another browser then they get the same token to not change the first one
+    if (this.token) {
+        return this.token
+    }
     const token = jwt.sign({ _id: this._id.toHexString() },
         process.env.JWT_SECRET).toString();
     this.token = token;
@@ -57,5 +62,28 @@ UserSchema.pre("save", async function (next) {
         next()
     }
 })
+
+UserSchema.statics.findUserByCredentials = async function (email, password) {
+    const user = await this.findOne({ email })
+    if (!user) {
+        throw {
+            errors: {
+                email: { message: 'User not found' }
+            }
+        }
+    } else {
+        let comparison = await bcrypt.compare(password, user.password)
+        if (await bcrypt.compare(password, user.password)) {
+            return user
+        } else {
+            throw {
+                errors: {
+                    email: { message: 'Incorrect password' }
+                }
+            }
+        }
+    }
+}
+
 
 module.exports = mongoose.model('User', UserSchema)
