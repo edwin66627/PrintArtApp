@@ -1,3 +1,5 @@
+const User = require("../models/user")
+
 //Find user, attach it to the request and do error handling
 module.exports = async (req, res) => {
     let token;

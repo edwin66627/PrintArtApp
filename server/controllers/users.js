@@ -6,7 +6,7 @@ exports.create = async (req, res) => {
     const user = new User({ name, email, password })
     try {
         const doc = await user.save()
-        const token = await doc.generateAuthtoken()
+        const token = await doc.generateAuthToken()
         res
             .header("authorization", `Bearer ${token}`)
             .send({ user: doc })
@@ -14,5 +14,5 @@ exports.create = async (req, res) => {
         res.status(400).send(err)
     }
 }
-//Find user and do error handling
+
 exports.read = async (req, res) => res.send({ user: req.user })
