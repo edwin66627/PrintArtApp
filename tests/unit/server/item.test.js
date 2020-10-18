@@ -2,7 +2,7 @@ const expect = require('expect')
 const app = require('../../../server')
 const request = require('supertest')
 const Item = require('../../../server/models/item')
-const { seedItems, populateItems } = require('./seed')
+const { seedItems, populateItems, seedUsers } = require('./seed')
 const { ObjectId } = require('mongodb')
 
 /*Mocha life cycle hook to clear any pre-existing data in MongoDB so it doesn´t interfere with
@@ -15,6 +15,7 @@ describe("POST /items", () => {
         const body = { title: 'Test title' }
         const res = await request(app)
             .post('/items')
+            .set("authorization", `Bearer ${seedUsers[0].token}`)
             .send(body)
             .expect(200);
         expect(res.body.item.title).toBe(body.title)
@@ -25,6 +26,7 @@ describe("POST /items", () => {
     it('should not create an item with invalid data', async () => {
         await request(app)
             .post('/items')
+            .set("authorization", `Bearer ${seedUsers[0].token}`)
             .send({})
             .expect(400);
         const items = await Item.find()
